@@ -7,15 +7,15 @@ namespace Xamarin.Forms.EasyLoading
     public static class LoadingLayout
     {
         public static readonly BindableProperty IsLoadingProperty = BindableProperty.CreateAttached("IsLoading", typeof(bool), typeof(Layout<View>), default(bool), defaultBindingMode: BindingMode.TwoWay, propertyChanged: (b, o, n) => OnIsLoadingChanged(b, (bool)o, (bool)n));
-        public static readonly BindableProperty LoadingTemplateProperty = BindableProperty.CreateAttached("LoadingTemplate", typeof(DataTemplate), typeof(Layout<View>), default(DataTemplate), propertyChanged: (b, o, n) => { GetSkeletonLayoutController(b).LoadingTemplate = (DataTemplate)n; });
+        public static readonly BindableProperty LoadingTemplateProperty = BindableProperty.CreateAttached("LoadingTemplate", typeof(DataTemplate), typeof(Layout<View>), default(DataTemplate), propertyChanged: (b, o, n) => { GetLoadingLayoutController(b).LoadingTemplate = (DataTemplate)n; });
 
         // TODO: Figure out if a selector makes sense...
         public static readonly BindableProperty LoadingTemplateSelectorProperty =
         BindableProperty.CreateAttached("LoadingTemplateSelector", typeof(DataTemplateSelector), typeof(Layout<View>), default(DataTemplateSelector),
-        propertyChanged: (b, o, n) => { GetSkeletonLayoutController(b).LoadingTemplateSelector = (DataTemplateSelector)n; });
+        propertyChanged: (b, o, n) => { GetLoadingLayoutController(b).LoadingTemplateSelector = (DataTemplateSelector)n; });
 
-        static readonly BindableProperty SkeletonLayoutControllerProperty =
-             BindableProperty.CreateAttached("SkeletonLayoutController", typeof(LoadingLayoutController), typeof(Layout<View>), default(LoadingLayoutController),
+        static readonly BindableProperty LoadingLayoutControllerProperty =
+             BindableProperty.CreateAttached("LoadingLayoutController", typeof(LoadingLayoutController), typeof(Layout<View>), default(LoadingLayoutController),
                  defaultValueCreator: (b) => new LoadingLayoutController((Layout<View>)b),
                  propertyChanged: (b, o, n) => OnControllerChanged(b, (LoadingLayoutController)o, (LoadingLayoutController)n));
 
@@ -55,22 +55,22 @@ namespace Xamarin.Forms.EasyLoading
             // Swap out the current children for the Loading Template.
             if (oldValue != newValue && newValue)
             {
-                GetSkeletonLayoutController(bindable).SwitchToLoadingTemplate();
+                GetLoadingLayoutController(bindable).SwitchToLoadingTemplate();
             }
             else if (oldValue != newValue && !newValue)
             {
-                GetSkeletonLayoutController(bindable).SwitchToContent();
+                GetLoadingLayoutController(bindable).SwitchToContent();
             }
         }
 
-        static LoadingLayoutController GetSkeletonLayoutController(BindableObject b)
+        static LoadingLayoutController GetLoadingLayoutController(BindableObject b)
         {
-            return (LoadingLayoutController)b.GetValue(SkeletonLayoutControllerProperty);
+            return (LoadingLayoutController)b.GetValue(LoadingLayoutControllerProperty);
         }
 
-        static void SetSkeletonLayoutController(BindableObject b, LoadingLayoutController value)
+        static void SetLoadingLayoutController(BindableObject b, LoadingLayoutController value)
         {
-            b.SetValue(SkeletonLayoutControllerProperty, value);
+            b.SetValue(LoadingLayoutControllerProperty, value);
         }
 
         static void OnControllerChanged(BindableObject b, LoadingLayoutController oldC, LoadingLayoutController newC)
@@ -118,7 +118,7 @@ namespace Xamarin.Forms.EasyLoading
         }
 
         // TODO: Figure out if a selector makes sense...
-        void SetItemTemplateSelector(DataTemplateSelector loadingTemplateSelector)
+        void SetLoadingTemplateSelector(DataTemplateSelector loadingTemplateSelector)
         {
             _loadingTemplateSelector = loadingTemplateSelector;
         }
