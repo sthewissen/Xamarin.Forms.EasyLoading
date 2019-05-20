@@ -24,8 +24,33 @@ Install this package into your shared project. There is no need to install it in
    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
    xmlns:local="clr-namespace:Xamarin.Forms.EasyLoading; assembly=Xamarin.Forms.EasyLoading" 
    x:Class="SampleApp.MainPage">
-             
-  ...
-             
+
+   <Grid ll:LoadingLayout.IsLoading="{Binding IsFullscreenLoading}">
+      <ll:LoadingLayout.LoadingTemplate>
+         <DataTemplate>
+            <Grid BackgroundColor="White">
+               <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                  <ActivityIndicator Color="#1abc9c" IsRunning="{Binding IsFullscreenLoading}" />
+                  <Label Text="Loading..." HorizontalOptions="Center" />
+               </StackLayout>
+            </Grid>
+         </DataTemplate>
+      </ll:LoadingLayout.LoadingTemplate>      
+  
+     ...
+     
+  </Grid>
+  
 </ContentPage>
 ```
+
+## What can I do with it?
+
+Your imagination is the only limit to what you can do. You can use the control to recreate your layout and make a skeleton loader our of it. Or you can just use a simple `Label` to indicate that you're loading something. The following parts are what make this thing tick:
+
+| Property | What it does | Extra info |
+| ------ | ------ | ------ |
+| `IsLoading` | Bind this to a property that indicates when to show/hide the loader. | |
+| `LoadingTemplate` | A data template that contains what is shown when loading. | A ```DataTemplate``` object. |
+| `LoadingTemplateSelector` | A template selector to dynamically show a specific loader. | A ```DataTemplateSelector``` object. |
+| `RepeatCount` | Repeats the `LoadingTemplate` by a given amount. | Ideal to use to show a list of items loading. |
