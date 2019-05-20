@@ -19,14 +19,14 @@ namespace EasyLoadingSample.PageModels
             FullscreenLoadingCommand = new Command(async (x) =>
             {
                 IsFullscreenLoading = true;
-                await Task.Delay(3000);
+                await Task.Delay(2000);
                 IsFullscreenLoading = false;
             });
 
             SkeletonCommand = new Command(async (x) =>
             {
                 IsSkeletonLoading = true;
-                await Task.Delay(3000);
+                await Task.Delay(2000);
                 IsSkeletonLoading = false;
             });
 

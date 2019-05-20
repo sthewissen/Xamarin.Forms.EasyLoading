@@ -16,7 +16,7 @@ namespace EasyLoadingSample.PageModels
         {
             ToggleLoadingCommand = new Command(async (x) => { 
                 IsLoading = true;
-                await Task.Delay(3000);
+                await Task.Delay(2000);
                 IsLoading = false; 
             });
 

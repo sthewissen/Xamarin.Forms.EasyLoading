@@ -16,6 +16,7 @@
     <PackageReference Include="FreshMvvm" Version="3.0.0" />
     <PackageReference Include="LiveXAML" Version="2.1.72" />
     <PackageReference Include="PropertyChanged.Fody" Version="3.0.1" />
+    <PackageReference Include="Xamarin.Forms.EasyLoading" Version="1.0.2" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Pages\" />

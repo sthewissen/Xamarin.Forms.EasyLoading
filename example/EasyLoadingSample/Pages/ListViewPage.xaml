@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ContentPage Title="Repeating Items" xmlns:ll="clr-namespace:Xamarin.Forms.EasyLoading" xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core" ios:Page.UseSafeArea="true" xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="EasyLoadingSample.Pages.ListViewPage">
+<ContentPage Title="Repeating Items" xmlns:ll="clr-namespace:Xamarin.Forms.EasyLoading;assembly=Xamarin.Forms.EasyLoading" xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core" ios:Page.UseSafeArea="true" xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="EasyLoadingSample.Pages.ListViewPage">
     <ContentPage.Content>
         <Grid>
             <Grid.RowDefinitions>
@@ -10,7 +10,7 @@
             <StackLayout Grid.Row="0" ll:LoadingLayout.IsLoading="{Binding IsLoading}" ll:LoadingLayout.RepeatCount="3">
                 <ll:LoadingLayout.LoadingTemplate>
                     <DataTemplate>
-                        <Grid Padding="20" HeightRequest="150">
+                        <Grid Padding="20" HeightRequest="120">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="24" />
                                 <RowDefinition Height="20" />
@@ -39,7 +39,7 @@
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <ViewCell>
-                                <Grid Padding="20">
+                                <Grid HeightRequest="120" Padding="20">
                                     <Grid.RowDefinitions>
                                         <RowDefinition Height="24" />
                                         <RowDefinition Height="20" />
