@@ -3,7 +3,7 @@
 # Xamarin.Forms.EasyLoading
 A collection of attached properties that let you specify a loading state view for any of your existing layouts.
 
-[![Build status](https://sthewissen.visualstudio.com/EasyLoading/_apis/build/status/EasyLoading-Deployment-CI)]() ![](https://img.shields.io/nuget/vpre/Xamarin.Forms.EasyLoading.svg)
+[![Build status](https://sthewissen.visualstudio.com/EasyLoading/_apis/build/status/EasyLoading-CI)]() ![](https://img.shields.io/nuget/vpre/Xamarin.Forms.EasyLoading.svg)
 
 ## Why EasyLoading?
 
