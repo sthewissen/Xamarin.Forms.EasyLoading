@@ -7,9 +7,9 @@ A collection of attached properties that let you specify a loading state view fo
 
 ## Why EasyLoading?
 
-Have you ever had a piece of XAML code that didn't produce the layout you expected? Did you change background colors on certain elements to get an idea of where they are positioned? Admit it, you have and pretty much all of us have at some point. Either way, this is the package for you! It adds a very colorful debug mode to each of your `ContentPage`s that lets you immediately see where all of your elements are located!
+A loading indicator is a common element throughout any mobile app. People create loading views to overlay on an entire screen or maybe just a subsection of your screen needs an individual loader. By implementing `LoadingLayout` bindable properties you can turn any layout element like a `Grid` or `StackLayout` into an individually loading element! You can even repeat your loading layout to represent a skeleton list of items loading.
 
-<img src="https://raw.githubusercontent.com/sthewissen/Xamarin.Forms.EasyLoading/master/images/sample.png" />
+<img src="https://raw.githubusercontent.com/sthewissen/Xamarin.Forms.EasyLoading/master/images/sample.gif" />
 
 ## How to use it?
 
