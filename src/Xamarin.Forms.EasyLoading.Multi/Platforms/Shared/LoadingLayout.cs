@@ -107,12 +107,17 @@ namespace Xamarin.Forms.EasyLoading
         readonly WeakReference<Layout<View>> _layoutWeakReference;
         DataTemplate _loadingTemplate;
         int _repeatCount;
+        private bool _layoutIsGrid = false;
         DataTemplateSelector _loadingTemplateSelector; // TODO: Figure out if a selector makes sense...
 
         private IList<View> _originalContent;
 
         public DataTemplate LoadingTemplate { get => _loadingTemplate; set => SetLoadingTemplate(value); }
-        public int RepeatCount { get => _repeatCount; set => _repeatCount = value; }
+        public int RepeatCount
+        {
+            get => _repeatCount;
+            set => _repeatCount = value;
+        }
 
         // TODO: Figure out if a selector makes sense...
         public DataTemplateSelector LoadingTemplateSelector { get => _loadingTemplateSelector; set => _loadingTemplateSelector = value; }
@@ -169,9 +174,23 @@ namespace Xamarin.Forms.EasyLoading
             // Add the loading template.
             layout.Children.Clear();
 
+            if (layout is Grid)
+            {
+                layout.Children.Add(new StackLayout());
+                _layoutIsGrid = true;
+            }
             for (int i = 0; i < _repeatCount; i++)
             {
-                layout.Children.Add(CreateItemView(layout));
+                if (_layoutIsGrid)
+                {
+                    if (layout.Children[0] is StackLayout stack)
+                        stack.Children.Add(CreateItemView(layout));
+                }
+                else
+                {
+                    layout.Children.Add(CreateItemView(layout));
+
+                }
             }
         }
 
