@@ -120,7 +120,7 @@ namespace Xamarin.Forms.EasyLoading
         public LoadingLayoutController(Layout<View> layout, int repeatCount)
         {
             _layoutWeakReference = new WeakReference<Layout<View>>(layout);
-            _repeatCount = 1;
+            _repeatCount = repeatCount <= 0 ? 1 : repeatCount;
         }
 
         void SetLoadingTemplate(DataTemplate loadingTemplate)
