@@ -19,7 +19,8 @@
     <PackageReference Include="Xamarin.Forms.EasyLoading" Version="1.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Pages\" />
-    <Folder Include="PageModels\" />
+    <EmbeddedResource Update="Pages\ListViewAnimationPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

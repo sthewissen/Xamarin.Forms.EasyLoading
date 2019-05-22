@@ -13,6 +13,7 @@ namespace EasyLoadingSample.PageModels
         public ICommand FullscreenLoadingCommand { get; set; }
         public ICommand SkeletonCommand { get; set; }
         public ICommand RepeatingCommand { get; set; }
+        public ICommand AnimatedRepeatingCommand { get; set; }
 
         public MainPageModel()
         {
@@ -22,6 +23,8 @@ namespace EasyLoadingSample.PageModels
                 await Task.Delay(2000);
                 IsFullscreenLoading = false;
             });
+
+
 
             SkeletonCommand = new Command(async (x) =>
             {
@@ -33,6 +36,11 @@ namespace EasyLoadingSample.PageModels
             RepeatingCommand = new Command(async (x) =>
             {
                 await CoreMethods.PushPageModel<ListViewPageModel>();
+            });
+
+            AnimatedRepeatingCommand = new Command(async (x) =>
+            {
+                await CoreMethods.PushPageModel<ListViewAnimationPageModel>();
             });
         }
     }
