@@ -21,5 +21,6 @@
   <ItemGroup>
     <Folder Include="Pages\" />
     <Folder Include="PageModels\" />
+    <Folder Include="Controls\" />
   </ItemGroup>
 </Project>
