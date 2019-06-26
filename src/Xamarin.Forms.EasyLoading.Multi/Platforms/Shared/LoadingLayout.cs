@@ -7,8 +7,9 @@ namespace Xamarin.Forms.EasyLoading
     public static class LoadingLayout
     {
         public static readonly BindableProperty IsLoadingProperty = BindableProperty.CreateAttached("IsLoading", typeof(bool), typeof(Layout<View>), default(bool), propertyChanged: (b, o, n) => OnIsLoadingChanged(b, (bool)o, (bool)n));
-        public static readonly BindableProperty LoadingTemplateProperty = BindableProperty.CreateAttached("LoadingTemplate", typeof(DataTemplate), typeof(Layout<View>), default(DataTemplate), propertyChanged: (b, o, n) => { GetLoadingLayoutController(b).LoadingTemplate = (DataTemplate)n; });
+        public static readonly BindableProperty LoadingTemplateProperty = BindableProperty.CreateAttached("LoadingTemplate", typeof(DataTemplate), typeof(Layout<View>), default(DataTemplate), propertyChanged: (b, o, n) => { GetLoadingLayoutController(b).LoadingStateTemplate = (DataTemplate)n; });
 
+        public static readonly BindableProperty ErrorTemplateProperty = BindableProperty.CreateAttached("ErrorTemplate", typeof(DataTemplate), typeof(Layout<View>), default(DataTemplate), propertyChanged: (b, o, n) => { GetLoadingLayoutController(b).LoadingStateTemplate = (DataTemplate)n; });
         public static readonly BindableProperty RepeatCountProperty =
             BindableProperty.CreateAttached("RepeatCount", typeof(int), typeof(Layout<View>), defaultValue: 1,
                  propertyChanged: (b, o, n) => { GetLoadingLayoutController(b).RepeatCount = (int)n; });
@@ -22,6 +23,10 @@ namespace Xamarin.Forms.EasyLoading
              BindableProperty.CreateAttached("LoadingLayoutController", typeof(LoadingLayoutController), typeof(Layout<View>), default(LoadingLayoutController),
                  defaultValueCreator: (b) => new LoadingLayoutController((Layout<View>)b, 1),
                  propertyChanged: (b, o, n) => OnControllerChanged(b, (LoadingLayoutController)o, (LoadingLayoutController)n));
+
+        // Added to handle StateChanges for Template
+        public static readonly BindableProperty LoadingStateProperty = BindableProperty.CreateAttached("LoadingState", typeof(LoadingState), typeof(Layout<View>),
+            LoadingState.Success, propertyChanged: (b, o, n) => OnLoadingStateChanged(b, (LoadingState)o, (LoadingState)n));
 
         public static void SetRepeatCount(BindableObject b, int value)
         {
@@ -53,6 +58,16 @@ namespace Xamarin.Forms.EasyLoading
             return (DataTemplate)b.GetValue(LoadingTemplateProperty);
         }
 
+        public static void SetErrorTemplate(BindableObject b, DataTemplate value)
+        {
+            b.SetValue(ErrorTemplateProperty, value);
+        }
+
+        public static DataTemplate GetErrorTemplate(BindableObject b)
+        {
+            return (DataTemplate)b.GetValue(ErrorTemplateProperty);
+        }
+
         // TODO: Figure out if a selector makes sense...
         public static void SetLoadingTemplateSelector(BindableObject b, DataTemplateSelector value)
         {
@@ -64,16 +79,47 @@ namespace Xamarin.Forms.EasyLoading
             return (DataTemplateSelector)b.GetValue(LoadingTemplateSelectorProperty);
         }
 
+        public static void SetLoadingState(BindableObject b, LoadingState value)
+        {
+            b.SetValue(LoadingStateProperty, value);
+        }
+
+        public static LoadingState GetLoadingState(BindableObject b)
+        {
+            return (LoadingState)b.GetValue(LoadingStateProperty);
+        }
+
         static void OnIsLoadingChanged(BindableObject bindable, bool oldValue, bool newValue)
         {
             // Swap out the current children for the Loading Template.
             if (oldValue != newValue && newValue)
             {
+                SetLoadingState(bindable, LoadingState.Loading); // Backward Compat for IsLoadingProperty
                 GetLoadingLayoutController(bindable).SwitchToLoadingTemplate();
             }
             else if (oldValue != newValue && !newValue)
             {
+                SetLoadingState(bindable, LoadingState.Success); // Backward Compat for IsLoadingProperty
                 GetLoadingLayoutController(bindable).SwitchToContent();
+            }
+        }
+
+        static void OnLoadingStateChanged(BindableObject bindable, LoadingState oldValue, LoadingState newValue)
+        {
+            // Swap out the current children for the Loading Template.
+            if (oldValue != newValue && GetLoadingState(bindable) == LoadingState.Success)
+            {
+                GetLoadingLayoutController(bindable).SwitchToContent();
+            }
+            else if (oldValue != newValue && GetLoadingState(bindable) == LoadingState.Loading)
+            {
+                GetLoadingLayoutController(bindable).LoadingStateTemplate = GetLoadingTemplate(bindable);
+                GetLoadingLayoutController(bindable).SwitchToLoadingTemplate();
+            }
+            else if (oldValue != newValue && GetLoadingState(bindable) == LoadingState.Error)
+            {
+                GetLoadingLayoutController(bindable).LoadingStateTemplate = GetErrorTemplate(bindable);
+                GetLoadingLayoutController(bindable).SwitchToLoadingTemplate();
             }
         }
 
@@ -93,8 +139,17 @@ namespace Xamarin.Forms.EasyLoading
             {
                 return;
             }
-
-            newC.LoadingTemplate = GetLoadingTemplate(b);
+            // Use one State Template in controller to reduce workload for adding more states
+            switch (GetLoadingState(b))
+            {
+                case LoadingState.Error:
+                    newC.LoadingStateTemplate = GetErrorTemplate(b);
+                    break;
+                default:
+                    newC.LoadingStateTemplate = GetLoadingTemplate(b);
+                    break;
+            }
+            newC.LoadingState = GetLoadingState(b);
             newC.RepeatCount = GetRepeatCount(b);
 
             // TODO: Figure out if a selector makes sense...
@@ -105,18 +160,24 @@ namespace Xamarin.Forms.EasyLoading
     class LoadingLayoutController
     {
         readonly WeakReference<Layout<View>> _layoutWeakReference;
-        DataTemplate _loadingTemplate;
+        DataTemplate _loadingStateTemplate;
         int _repeatCount;
+        LoadingState _loadingState;
         private bool _layoutIsGrid = false;
         DataTemplateSelector _loadingTemplateSelector; // TODO: Figure out if a selector makes sense...
 
         private IList<View> _originalContent;
 
-        public DataTemplate LoadingTemplate { get => _loadingTemplate; set => SetLoadingTemplate(value); }
+        public DataTemplate LoadingStateTemplate { get => _loadingStateTemplate; set => SetLoadingStateTemplate(value); }
         public int RepeatCount
         {
             get => _repeatCount;
             set => _repeatCount = value;
+        }
+        public LoadingState LoadingState
+        {
+            get => _loadingState;
+            set => _loadingState = value;
         }
 
         // TODO: Figure out if a selector makes sense...
@@ -128,14 +189,14 @@ namespace Xamarin.Forms.EasyLoading
             _repeatCount = repeatCount <= 0 ? 1 : repeatCount;
         }
 
-        void SetLoadingTemplate(DataTemplate loadingTemplate)
+        void SetLoadingStateTemplate(DataTemplate loadingStateTemplate)
         {
-            if (loadingTemplate is DataTemplateSelector)
+            if (loadingStateTemplate is DataTemplateSelector)
             {
                 throw new NotSupportedException($"You are using an instance of {nameof(DataTemplateSelector)} to set the {nameof(LoadingLayout)}.{LoadingLayout.LoadingTemplateProperty.PropertyName} property. Please provide a DataTemplate instead.");
             }
 
-            _loadingTemplate = loadingTemplate;
+            _loadingStateTemplate = loadingStateTemplate;
         }
 
         public void SwitchToContent()
@@ -166,31 +227,39 @@ namespace Xamarin.Forms.EasyLoading
             }
 
             // Put the original content somewhere where we can restore it.
-            _originalContent = new List<View>();
+            if (_originalContent == null)
+            {
+                _originalContent = new List<View>();
 
-            foreach (var item in layout.Children)
-                _originalContent.Add(item);
-
+                foreach (var item in layout.Children)
+                    _originalContent.Add(item);
+            }
             // Add the loading template.
             layout.Children.Clear();
-
-            if (layout is Grid)
+            if (_loadingState == LoadingState.Loading)
             {
-                layout.Children.Add(new StackLayout());
-                _layoutIsGrid = true;
+                if (layout is Grid)
+                {
+                    layout.Children.Add(new StackLayout());
+                    _layoutIsGrid = true;
+                }
+                for (int i = 0; i < _repeatCount; i++)
+                {
+                    if (_layoutIsGrid)
+                    {
+                        if (layout.Children[0] is StackLayout stack)
+                            stack.Children.Add(CreateItemView(layout));
+                    }
+                    else
+                    {
+                        layout.Children.Add(CreateItemView(layout));
+
+                    }
+                }
             }
-            for (int i = 0; i < _repeatCount; i++)
+            else if (_loadingState == LoadingState.Error)
             {
-                if (_layoutIsGrid)
-                {
-                    if (layout.Children[0] is StackLayout stack)
-                        stack.Children.Add(CreateItemView(layout));
-                }
-                else
-                {
-                    layout.Children.Add(CreateItemView(layout));
-
-                }
+                layout.Children.Add(CreateItemView(layout));
             }
         }
 
@@ -200,7 +269,7 @@ namespace Xamarin.Forms.EasyLoading
         /// <returns>The item view.</returns>
         View CreateItemView(Layout<View> layout)
         {
-            return CreateItemView(_loadingTemplate ?? _loadingTemplateSelector?.SelectTemplate(null, layout));
+            return CreateItemView(_loadingStateTemplate ?? _loadingTemplateSelector?.SelectTemplate(_loadingState, layout)); // Set Item to state so user can use selector instead
         }
 
         /// <summary>

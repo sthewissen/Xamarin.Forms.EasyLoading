@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.EasyLoading;
 
 namespace EasyLoadingSample.PageModels
 {
@@ -10,9 +11,13 @@ namespace EasyLoadingSample.PageModels
         public bool IsFullscreenLoading { get; set; }
         public bool IsSkeletonLoading { get; set; }
 
+        public LoadingState LoadingState { get; set; } = LoadingState.Success;
+        public bool IsStateLoading { get; set; }
+
         public ICommand FullscreenLoadingCommand { get; set; }
         public ICommand SkeletonCommand { get; set; }
         public ICommand RepeatingCommand { get; set; }
+        public ICommand StateCommand { get; set; }
 
         public MainPageModel()
         {
@@ -33,6 +38,27 @@ namespace EasyLoadingSample.PageModels
             RepeatingCommand = new Command(async (x) =>
             {
                 await CoreMethods.PushPageModel<ListViewPageModel>();
+            });
+
+            StateCommand = new Command(async (x) =>
+            {
+                try
+                {
+                    IsStateLoading = true;
+                    LoadingState = LoadingState.Loading;
+                    await Task.Delay(2000);
+                    throw new Exception();
+                }
+                catch
+                {
+                    LoadingState = LoadingState.Error;
+                    await Task.Delay(2000);
+                }
+                finally
+                {
+                    LoadingState = LoadingState.Success;
+                    IsStateLoading = false;
+                }
             });
         }
     }
