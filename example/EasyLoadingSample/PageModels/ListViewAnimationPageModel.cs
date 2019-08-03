@@ -12,16 +12,21 @@ namespace EasyLoadingSample.PageModels
     {
         public ObservableCollection<Order> Orders { get; set; }
         public bool IsLoading { get; set; }
+        public bool IsEmpty { get; set; }
         public ICommand ToggleLoadingCommand { get; set; }
 
         public ListViewAnimationPageModel()
         {
             ToggleLoadingCommand = new Command(async (x) => {
+                IsEmpty = true;
+                await Task.Delay(3000);
+                IsEmpty = false;
+
                 IsLoading = true;
                 await Task.Delay(3000);
                 IsLoading = false;
-              
-               
+
+
             });
 
             Orders = new ObservableCollection<Order>
