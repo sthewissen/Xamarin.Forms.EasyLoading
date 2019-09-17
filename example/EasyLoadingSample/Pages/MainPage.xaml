@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ContentPage Title="Hello LoadingLayout!" NavigationPage.BackButtonTitle="" xmlns:ll="clr-namespace:Xamarin.Forms.EasyLoading;assembly=Xamarin.Forms.EasyLoading" xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core" ios:Page.UseSafeArea="true" xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:EasyLoadingSample" x:Class="EasyLoadingSample.Pages.MainPage">
+<ContentPage Title="Hello LoadingLayout!" NavigationPage.BackButtonTitle=""  xmlns:controls="clr-namespace:EasyLoadingSample.Controls;assembly=EasyLoadingSample" xmlns:ll="clr-namespace:Xamarin.Forms.EasyLoading;assembly=Xamarin.Forms.EasyLoading" xmlns:ios="clr-namespace:Xamarin.Forms.PlatformConfiguration.iOSSpecific;assembly=Xamarin.Forms.Core" ios:Page.UseSafeArea="true" xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:local="clr-namespace:EasyLoadingSample" x:Class="EasyLoadingSample.Pages.MainPage">
     <Grid ll:LoadingLayout.IsLoading="{Binding IsFullscreenLoading}">
         <ll:LoadingLayout.LoadingTemplate>
             <DataTemplate>
@@ -43,18 +43,18 @@
                                     <ColumnDefinition Width="*" />
                                     <ColumnDefinition Width="*" />
                                 </Grid.ColumnDefinitions>
-                                <BoxView Grid.Row="0" Grid.ColumnSpan="2" HeightRequest="20" BackgroundColor="#cccccc" WidthRequest="120" />
-                                <BoxView Grid.Row="1" Grid.ColumnSpan="3" HeightRequest="20" BackgroundColor="#cccccc" WidthRequest="200" />
+                                <controls:BlinkingBoxView Grid.Row="0" Grid.ColumnSpan="2" HeightRequest="20" BackgroundColor="#cccccc" WidthRequest="120" />
+                                <controls:BlinkingBoxView Grid.Row="1" Grid.ColumnSpan="3" HeightRequest="20" BackgroundColor="#cccccc" WidthRequest="200" />
                                 
-                                <BoxView Grid.Row="2" Grid.ColumnSpan="3" HeightRequest="1" BackgroundColor="#cccccc" Margin="0,8" />
+                                <controls:BlinkingBoxView Grid.Row="2" Grid.ColumnSpan="3" HeightRequest="1" BackgroundColor="#cccccc" Margin="0,8" />
                                 
                                 <Label Grid.Row="3" Grid.Column="0" HeightRequest="20" HorizontalOptions="Center" Text="TOTAL ARTICLES" FontSize="10" TextColor="Gray" />
                                 <Label Grid.Row="3" Grid.Column="1" HeightRequest="20" HorizontalOptions="Center" Text="PRICE" FontSize="10" TextColor="Gray" />
                                 <Label Grid.Row="3" Grid.Column="2" HeightRequest="20" HorizontalOptions="Center" Text="BOXES" FontSize="10" TextColor="Gray" />
                                 
-                                <BoxView Grid.Row="4" Grid.Column="0" HeightRequest="20" BackgroundColor="#cccccc" HorizontalOptions="Fill" />
-                                <BoxView Grid.Row="4" Grid.Column="1" HeightRequest="20" BackgroundColor="#cccccc" HorizontalOptions="Fill" />
-                                <BoxView Grid.Row="4" Grid.Column="2" HeightRequest="20" BackgroundColor="#cccccc" HorizontalOptions="Fill" />
+                                <controls:BlinkingBoxView Grid.Row="4" Grid.Column="0" HeightRequest="20" BackgroundColor="#cccccc" HorizontalOptions="Fill" />
+                                <controls:BlinkingBoxView Grid.Row="4" Grid.Column="1" HeightRequest="20" BackgroundColor="#cccccc" HorizontalOptions="Fill" />
+                                <controls:BlinkingBoxView Grid.Row="4" Grid.Column="2" HeightRequest="20" BackgroundColor="#cccccc" HorizontalOptions="Fill" />
                             </Grid>
                         </DataTemplate>
                     </ll:LoadingLayout.LoadingTemplate>
